@@ -1,0 +1,133 @@
+{
+  "name":"ccs-ordinary",
+  "schedule" : [
+    {
+      "name" : "update-latency",
+      "operation" : {
+        "include-in-reporting" : false,
+        "operation-type" : "update-latency",
+        "latency" : {{ latency }}
+      }
+    },
+    {
+      "name" : "prepare-indices",
+      "operation" : {
+        "include-in-reporting" : false,
+        "operation-type" : "prepare-indices",
+        "index" : "{{ index }}"
+      }
+    },
+    {  
+      "name" : "match-all-random-sort",
+      "operation" : {
+        "operation-type": "search",
+        "param-source": "match-all-random-sort",
+        "index" : "*:{{ index }}",
+        "seed": {{ seed }}
+      },
+      "warmup-iterations": 10,
+      "iterations": {{ iters }}
+    },
+    {  
+      "name" : "highlighting-random-sort",
+      "operation" : {
+        "operation-type": "search",
+        "param-source": "highlighting-random-sort",
+        "index" : "*:{{ index }}",
+        "seed": {{ seed }}
+      },
+      "warmup-iterations": 10,
+      "iterations": {{ iters }}
+    },
+    {  
+      "name" : "match-all-from-900-random-sort",
+      "operation" : {
+        "operation-type": "search",
+        "param-source": "match-all-random-sort",
+        "index" : "*:{{ index }}",
+        "seed": {{ seed }},
+        "from" : 900
+      },
+      "warmup-iterations": 10,
+      "iterations": {{ iters }}
+    },
+    {  
+      "name" : "highlighting-from-900-random-sort",
+      "operation" : {
+        "operation-type": "search",
+        "param-source": "highlighting-random-sort",
+        "index" : "*:{{ index }}",
+        "seed": {{ seed }},
+        "from" : 900
+      },
+      "warmup-iterations": 10,
+      "iterations": {{ iters }}
+    },
+    {  
+      "name" : "match-all-from-9900-random-sort",
+      "operation" : {
+        "operation-type": "search",
+        "param-source": "match-all-random-sort",
+        "index" : "*:{{ index }}",
+        "seed": {{ seed }},
+        "from" : 9900
+      },
+      "warmup-iterations": 10,
+      "iterations": {{ iters }}
+    },
+    {  
+      "name" : "highlighting-from-9900-random-sort",
+      "operation" : {
+        "operation-type": "search",
+        "param-source": "highlighting-random-sort",
+        "index" : "*:{{ index }}",
+        "seed": {{ seed }},
+        "from" : 9900
+      },
+      "warmup-iterations": 10,
+      "iterations": {{ iters }}
+    },
+    {  
+      "name" : "terms-aggs-size-100-cache",
+      "operation" : {
+        "operation-type": "search",
+        "index" : "*:{{ index }}",
+        "cache" : true,
+        "body": {
+          "size": 0,
+          "aggs" : {
+            "type": {
+              "terms": {
+                "field": "type.keyword",
+                "size": 100
+              }
+            },
+            "answers": {
+              "filter": {
+                "term": {
+                  "type": "answer"
+                }
+              },
+              "aggs" : {
+                "answer_per_question" : {
+                  "terms": {
+                    "field": "questionId.keyword",
+                    "size": 100
+                  }
+                },
+                "answer_per_user" : {
+                  "terms" : {
+                    "field": "user.keyword",
+                    "size": 100
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "warmup-iterations": 10,
+      "iterations": {{ iters }}
+    }
+  ]
+}
