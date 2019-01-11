@@ -1,0 +1,12 @@
+{
+        "processors": [
+          {
+            "set" : {
+              "field": "suggest",
+              "value": {
+                "input" : "{{name}}"
+              }
+            }
+          }
+        ]
+}
